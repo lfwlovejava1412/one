@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/css3/css.css">
+    <script src="../static/js/jquery-1.8.3.js"></script>
+    <script src="../static/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+
+<form action="/list" method="get">
+    姓名:<input type="text" name="sname" th:value="${vo.sname}">
+    <select name="cid">
+        <option th:each="c:${li}" th:value="${c.cid}" th:text="${c.cname}" th:selected="${vo.cid}"></option>
+    </select><br>
+    最小<input type="text" name="minday" onclick="WdatePicker()">
+    最大<input type="text" name="maxday" onclick="WdatePicker()">
+    <input type="submit" value="查询">
+</form>
+
+<button id="add">添加</button>
+<input type="button" value="全选/全不选" id="all">
+<input type="button" value="反选" id="rigth">
+<input type="button" value="批量删除" id="deleteAll">
+<table>
+    <tr>
+        <td></td>
+        <td>sid</td>
+        <td>sname</td>
+        <td>spassword</td>
+        <td>sex</td>
+        <td>birthday</td>
+        <td>cid</td>
+    </tr>
+    <tr th:each="s:${pi.list}">
+        <td><input type="checkbox" th:value="${s.sid}"></td>
+        <td th:text="${s.sid}"></td>
+        <td th:text="${s.sname}"></td>
+        <td th:text="${s.spassword}"></td>
+        <td th:text="${s.sex}"></td>
+        <td th:text="${#dates.format(s.birthday,'yyyy-MM-dd')}"></td>
+        <td th:text="${s.cid}"></td>
+    </tr>
+    <tr>
+        <td colspan="10">
+            <input type="button" value="首页" th:onclick="|page(1)|">
+            <input type="button" value="上一页" th:onclick="|page(*{pi.pageNum==1?1:pi.prePage})|">
+            <input type="button" value="下一页" th:onclick="|page(*{pi.pageNum==pi.isLastPage?pi.isLastPage:pi.nextPage})|">
+            <input type="button" value="尾页" th:onclick="|page(*{pi.pages})|">
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
+<script>
+
+    function page(page) {
+        location="list?cpage="+page;
+    }
+
+    $("#all").click(function () {
+        $("[type=checkbox]").attr("checked",!$("[type=checkbox]").attr("checked"));
+    })
+    $("#rigth").click(function () {
+        $("[type=checkbox]").each(function () {
+            $(this).attr("checked",!$(this).attr("checked"))
+        });
+    })
+
+    $("#deleteAll").click(function () {
+        var str="";
+        $("[type=checkbox]:checked").each(function () {
+            str+=","+$(this).val()
+        });
+        str=str.substring(1);
+        $.ajax({
+            url:"deleteCheck",
+            data:{"ids":str},
+            type:"post",
+            dataType:"json",
+            success(a){
+                if (a){
+                    alert("删除成功!")
+                    location.reload();
+                }else {
+                    alert("删除失败!")
+                }
+            }
+        })
+    })
+
+    $("#add").click(function () {
+        location="toadd";
+    })
+</script>

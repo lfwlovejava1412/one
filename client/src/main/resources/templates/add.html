@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/css3/css.css">
+    <script src="../static/js/jquery-1.8.3.js"></script>
+    <script src="../static/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+
+<form>
+    sname:<input type="text" name="sname"><br>
+    spassword:<input type="text" name="spassword"><br>
+    sex:<input type="radio" name="sex" value="男">男
+    <input type="radio" name="sex" value="女">女<br>
+    birthday:<input type="text" name="birthday" onclick="WdatePicker()"><br>
+    <select name="cid">
+        <option th:each="c:${li}" th:value="${c.cid}" th:text="${c.cname}"></option>
+    </select><br>
+    <input type="button" value="添加" id="add">
+</form>
+
+<textarea placeholder="二维码内容..."></textarea><br>
+<button>生成二维码</button>
+<span class="hint"></span>
+<div class="qrCodeDiv">
+    <img src="" id="codeImg">
+</div>
+
+</body>
+</html>
+
+<script>
+    $(function () {
+        $("button").click(function () {
+            var codeContent = $("textarea").val();
+            console.log(codeContent);
+            if (codeContent.trim() == "") {
+                $(".hint").text("二维码内容不能为空").fadeIn(500);
+            } else {
+                $(".hint").text("").fadeOut(500);
+                $("#codeImg").attr("src", "/qrCode?codeContent=" + codeContent);
+            }
+        });
+    });
+
+    $("#add").click(function () {
+        $.ajax({
+            url:"addStu",
+            data:$("form").serialize(),
+            type:"post",
+            dataType:"json",
+            success(a){
+                if (a){
+                    alert("添加成功!")
+                    location="/list";
+                }else {
+                    alert("添加失败!")
+                }
+            }
+        })
+    })
+
+</script>

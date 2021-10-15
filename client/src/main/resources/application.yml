@@ -1,0 +1,31 @@
+# 服务器相关
+server:
+  port: 8081
+
+spring:
+  application:
+    name: boke-client
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+    check-template-location: true
+  mvc:
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      enabled: true #是否启用http上传处理
+      max-request-size: -1 #最大请求文件的大小
+      max-file-size: -1 #设置单个文件最大长度
+  ribbon:
+    ReadTimeout: 20000
+    ConnectTimeout: 20000
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5 # 获取服务列表的周期：5s
+    service-url:
+      defaultZone: http://127.0.0.1:8888/eureka
+      
+      
