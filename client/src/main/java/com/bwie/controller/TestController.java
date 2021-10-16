@@ -1,7 +1,9 @@
 package com.bwie.controller;
 
+import com.bwie.service.ITestService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.ribbon.proxy.annotation.Hystrix;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 public class TestController {
 
+    @Autowired
+    ITestService testService;
+
     @GetMapping("/test")
     @HystrixCommand(fallbackMethod = "error")
     public String test(){
+        String test = testService.test();
         return "ok";
     }
 
