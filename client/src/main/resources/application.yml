@@ -27,5 +27,8 @@ eureka:
     registry-fetch-interval-seconds: 5 # 获取服务列表的周期：5s
     service-url:
       defaultZone: http://127.0.0.1:8888/eureka
+feign:
+  hystrix:
+    enabled: true
       
       
